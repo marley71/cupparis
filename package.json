@@ -1,0 +1,52 @@
+{
+    "name": "cupparis-primevue2",
+    "version": "1.0.0",
+    "private": true,
+    "description": "crud cupparis basato su primevue",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Pier Paolo Ciullo",
+    "license": "ISC",
+    "eslintConfig": {
+        "root": true,
+        "env": {
+            "node": true
+        },
+        "extends": [
+            "plugin:vue/essential",
+            "eslint:recommended"
+        ],
+        "parserOptions": {
+            "parser": "babel-eslint"
+        },
+        "rules": {}
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not dead"
+    ],
+    "dependencies": {
+        "@babel/eslint-parser": "^7.12.16",
+        "@vee-validate/i18n": "^4.9.3",
+        "@vee-validate/rules": "^4.9.3",
+        "jquery": "^3.5.1",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.4",
+        "moment-with-locales-es6": "^1.0.1",
+        "npm": "^8.19.3",
+        "primevue": "^3.50",
+        "vee-validate": "^4.9.2",
+        "vue": "^3.3.0",
+        "vue-axios": "^3.4.1"
+    },
+    "devDependencies": {
+        "eslint": "^7.5.0",
+        "eslint-plugin-vue": "^7.0.0",
+        "jquery": "^3.5.1",
+        "moment": "^2.29.4",
+        "moment-with-locales-es6": "^1.0.1"
+    }
+}
