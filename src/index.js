@@ -1,5 +1,9 @@
 import cWidget from "./widgets/cWidget.vue"
+import routeConfs from "./confs/routes";
 
 export default {
-    cWidget
+    cWidget,
+    conf : {
+        routes : routeConfs
+    }
 }

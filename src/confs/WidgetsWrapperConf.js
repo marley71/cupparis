@@ -1,8 +1,8 @@
 import CrudCore from "../core/CrudCore.js"
 import Server from "../core/Server.js";
 
-export default class WidgetsWrapperConf {
-    defaultConf =  {
+export default {
+    commonConf : {
         name : '',
         value: null,
         placeholder : '',
@@ -10,22 +10,34 @@ export default class WidgetsWrapperConf {
         type : 'w-input',
         label : '',
         rules:'',
-    }
-
-    loadConf(conf) {
-        let that = this;
-        //console.log('WIDGET CONF',conf);
-        let dC = CrudCore.clone(this.defaultConf); //Object.assign({},this.defaultConf);
-        conf.type = conf.type || that.defaultConf.type;
-        let functionName = CrudCore.camelCase(conf.type);
-        //console.log('functionName',functionName)
-        if (that[functionName]) {
-            conf = that[functionName](conf);
+    },
+    setConf(conf) {
+        for (let k in this.commonConf) {
+            if (!(k in conf)) {
+                conf[k] = this.commonConf[k]
+            }
         }
-        conf = Object.assign(dC,conf);
-        //console.log('WIDGET',conf);
-        return conf;
-    }
+        let type = conf.type || 'w-input';
+        let functionName = CrudCore.camelCase(type);
+        if (this[functionName]) {
+            this[functionName](conf);
+        }
+    },
+
+    // loadConf(conf) {
+    //     let that = this;
+    //     //console.log('WIDGET CONF',conf);
+    //     let dC = CrudCore.clone(this.defaultConf); //Object.assign({},this.defaultConf);
+    //     conf.type = conf.type || that.defaultConf.type;
+    //     let functionName = CrudCore.camelCase(conf.type);
+    //     //console.log('functionName',functionName)
+    //     if (that[functionName]) {
+    //         conf = that[functionName](conf);
+    //     }
+    //     conf = Object.assign(dC,conf);
+    //     //console.log('WIDGET',conf);
+    //     return conf;
+    // }
 
     mapOptions(domainValues,domainValuesOrder) {
         let options = [];
@@ -48,18 +60,18 @@ export default class WidgetsWrapperConf {
         }
         //console.log('options',options);
         return options;
-    }
+    },
+
     wInput(conf) {
         if ( !('inputType' in conf) ) {
             conf.inputType = 'text';
         }
-        return conf;
-    }
+    },
 
     wSelect(conf) {
         conf.options = this.mapOptions(conf.domainValues,conf.domainValuesOrder);
         return conf;
-    }
+    },
 
     wHasmany(conf) {
         if (!conf.hasmanyType) {
@@ -75,23 +87,16 @@ export default class WidgetsWrapperConf {
             conf.displayTitle = false;
         }
         conf.hasmanyConf.defaultWidgetType = 'w-input';
-        return conf;
-    }
+    },
     wSelectButton(conf) {
         conf.options = this.mapOptions(conf.domainValues,conf.domainValuesOrder);
-        return conf;
-    }
+    },
 
-    wText(conf) {
-        conf.textClass = conf.textClass || '';
-        return conf;
-    }
 
     wBelongsto(conf) {
         conf.labelFields = conf.labelFields || ['label'];
         conf.separator =  conf.separator || ' ';
-        return conf;
-    }
+    },
 
     wAutocomplete(conf) {
         conf.route = null;
@@ -113,81 +118,35 @@ export default class WidgetsWrapperConf {
             conf.autocompleteValue = __initialValue();
             conf.suggestions = [conf.referredData];
         }
-
-        conf.search = conf.search || function (event) {
-            let that = this;
-
-            if (!conf.route) {
-                conf.route = that.createRoute('autocomplete');
-                conf.route.setValuesFromObj(that);
-            }
-            let field = conf.autocompleteField?conf.autocompleteField:conf.name;
-            conf.route.setParams({
-                field : field,
-                value : event.query,
-            });
-
-            console.log('route',that.route,that);
-            that.Server.route(that.route,function (json) {
-                console.log('json',json);
-                that.suggestions = json.result;
-            });
-            console.log('search',conf,event);
-        }
-
-        conf.getAutocompleteLabel = conf.getAutocompleteLabel || function(event) {
-            let that = this;
-
-            if (that.labelFields && that.labelFields.length > 0) {
-                let label = '';
-                for (let i in that.labelFields) {
-                    label += event[that.labelFields[i]] + ' ';
-                }
-                return label;
-            }
-            return event.label;
-            //console.log(that,'label',event);
-        }
-
-        return conf;
-    }
+    },
 
     wCheckbox(conf) {
         if (!conf.direction) {
             conf.direction = 'row';
         }
-
-        return conf;
-    }
+    },
 
     wRadio(conf) {
         if (!conf.direction) {
             conf.direction = 'row';
         }
-        return conf;
-    }
+    },
+
     wDatePicker(conf) {
-        console.log("DATEEEE",conf.value);
         if (conf.value) {
             conf.dateValue = new Date(conf.value);
-            console.log("DATEEEE",conf.dateValue);
         }
-        return conf;
-    }
+    },
+    wText(conf) {
+        conf.tagContainer = conf.tagContainer || 'span'
+        conf.textClass= conf.textClass || 'span'
+    },
     wDateText(conf) {
-        // if (!conf.displayFormat)
-        //     conf.displayFormat = 'DD/MM/YYYY';
-        // conf.dateFormat = 'yyyy-mm-dd';
-        // conf.formattedValue = null;
-        // conf.invalidDateString ='app.data-non-valida';
-        return Object.assign({
-            displayFormat : 'DD/MM/YYYY',
-            dateFormat : 'yyyy-mm-dd',
-            formattedValue : null,
-            invalidDateString : 'app.data-non-valida'
-        },conf);
-        //return conf;
-    }
+        conf.displayFormat = conf.displayFormat || 'DD/MM/YYYY';
+        conf.dateFormat = conf.dateFormat || 'yyyy-mm-dd';
+        conf.formattedValue =null;
+        conf.dateinvalidDateStringFormat = conf.dateinvalidDateStringFormat || CrudCore.translate('app.data-non-valida');
+    },
     wMultiSelect(conf) {
         let value = conf.value || [];
         if (!Array.isArray(value))
@@ -220,17 +179,17 @@ export default class WidgetsWrapperConf {
         conf.options = options;
         conf.filter = false;
         return conf;
-    }
+    },
     wSwap(conf) {
-        conf = Object.assign({
+        let dconf = {
             activeIcon: 'fa-check',
             routeName: 'set',
             title: 'swap',
             bgInactive: '#FF0000',
             bgActive: 'bg-red-400',
             domainValues: {
-                0: 'app.no',
-                1: 'app.si'
+                0: CrudCore.translate('app.no'),
+                1: CrudCore.translate('app.si')
             },
             slot: '',
             toggleActive: false,
@@ -239,14 +198,14 @@ export default class WidgetsWrapperConf {
             isAjax:true,  // se e' un controllo che deve fare la chiamata di update altrimenti e' un controllo normale in una form
             json : null, // ultimo json caricato dalla chiamata ajax,
             currentIndex : 0,  // indice corrente delle chiavi di domainValues
-        },conf);
-        conf.change = conf.change || function() {};
-        //console.log('SWAP',conf);
-        return conf;
-    }
+        }
+        for (let k in dconf) {
+            conf[k] = conf[k] || dconf[k];
+        }
+    },
 
     wSwapSelect(conf) {
-        conf = Object.assign({
+        let dconf = {
             activeIcon: 'fa-check',
             routeName: 'set',
             title: 'swap-select',
@@ -261,50 +220,64 @@ export default class WidgetsWrapperConf {
             json : null, // ultimo json caricato dalla chiamata ajax,
             currentIndex : 0,  // indice corrente delle chiavi di domainValues
             reload: false,
-        },conf);
-        conf.change = conf.change || function() {};
+        };
+        for (let k in dconf) {
+            conf[k] = conf[k] || dconf[k];
+        }
         conf.options = this.mapOptions(conf.domainValues,conf.domainValuesOrder);
-        console.log('SWAP-SELECT',conf);
-        return conf;
-    }
+    },
 
     wStatus(conf) {
+        if (!conf.statusType) {
+            conf.statusType = 'text';
+        }
         if (!("domainValues" in conf)) {
             conf.domainValues = {
-                0: 'app.no',
-                1: 'app.si'
+                0: CrudCore.translate('app.no'),
+                1: CrudCore.translate('app.si')
             };
         }
         if (! ("value" in conf) ){
             conf.value = Object.keys(conf.domainValues)[0];
         }
         conf.currentValue = conf.domainValues[conf.value];
-        return conf;
-    }
+        // in caso di action diamo la possibilita' di customizzare il contento dello stato che eseguira' l'azione
+        if (!("domainValuesHtml" in conf)) {
+            conf.domainValuesHtml = {};
+            for (let k in conf.domainValues) {
+                if (conf.statusType == 'action') {
+                    conf.domainValuesHtml[k] = k;
+                } else {
+                    conf.domainValuesHtml[k] = conf.domainValues[k];
+                }
+
+            }
+        }
+    },
 
     wTexthtml(conf) {
         if (!("toolbar" in conf)) {
             conf.toolbar = null;
         }
         return conf;
-    }
+    },
 
     wUpload(conf) {
         conf.files = null;
-        if (!conf.uploadFile) {
-            conf.uploadFile = function(event) {
-                this.files = event.files;
-                console.log('uploadevent',event,this);
-            }
-            conf.getValue = function () {
-                return this.value;
-            }
-            conf.getFileValue = function () {
-                return this.files;
-            }
-        }
-        return conf;
-    }
+        // if (!conf.uploadFile) {
+        //     conf.uploadFile = function(event) {
+        //         this.files = event.files;
+        //         console.log('uploadevent',event,this);
+        //     }
+        //     conf.getValue = function () {
+        //         return this.value;
+        //     }
+        //     conf.getFileValue = function () {
+        //         return this.files;
+        //     }
+        // }
+        //return conf;
+    },
     wUploadAjax(conf) {
         conf = this.wUpload(conf);
         conf.routeName = 'uploadfile';
@@ -404,7 +377,7 @@ export default class WidgetsWrapperConf {
             conf.value = JSON.stringify(conf.value);
         }
         return conf;
-    }
+    },
     wPreview(conf) {
         if (!conf.height) {
             conf.height = '30';
