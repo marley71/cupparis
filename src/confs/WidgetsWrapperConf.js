@@ -215,11 +215,13 @@ export default {
                 "-1": 'app.seleziona',
             },
             slot: '',
+            placeholder : '',
             toggleActive: false,
             isAjax:true,  // se e' un controllo che deve fare la chiamata di update altrimenti e' un controllo normale in una form
             json : null, // ultimo json caricato dalla chiamata ajax,
             currentIndex : 0,  // indice corrente delle chiavi di domainValues
             reload: false,
+            extraBind : {},
         };
         for (let k in dconf) {
             conf[k] = conf[k] || dconf[k];
@@ -255,6 +257,27 @@ export default {
         }
     },
 
+    // wStatus(conf) {
+    //     conf.statusType = 'text';
+    //     conf.domainValues = {
+    //         0: CrudCore.translate('app.no'),
+    //         1: CrudCore.translate('app.si')
+    //     }
+    //     conf.value = Object.keys(conf.domainValues)[0];
+    //     conf.currentValue = conf.domainValues[conf.value];
+    //
+    //     // in caso di action diamo la possibilita' di customizzare il contento dello stato che eseguira' l'azione
+    //     conf.domainValuesHtml = {};
+    //     for (let k in conf.domainValues) {
+    //         if (conf.statusType == 'action') {
+    //             conf.domainValuesHtml[k] = k;
+    //         } else {
+    //             conf.domainValuesHtml[k] = conf.domainValues[k];
+    //         }
+    //
+    //     }
+    // },
+
     wTexthtml(conf) {
         if (!("toolbar" in conf)) {
             conf.toolbar = null;
@@ -284,99 +307,98 @@ export default {
         conf.error = false;
         conf.errorMessage = '';
         conf.fileInfo = null;
-        if (!conf.setRouteValues) {
-            conf.setRouteValues =  function (route) {
-                route.setValues({
-                    modelName: this.modelName
-                })
-                return route;
-            }
-        }
-        if (!conf.onSuccess) {
-            conf.onSuccess = function () {
-                console.log('onSuccess',this.value);
-            }
-        }
-        if (!conf.onError) {
-            conf.onError = function () {
-                console.log('onError',this.value);
-            }
-        }
+        // if (!conf.setRouteValues) {
+        //     conf.setRouteValues =  function (route) {
+        //         route.setValues({
+        //             modelName: this.modelName
+        //         })
+        //         return route;
+        //     }
+        // }
+        // if (!conf.onSuccess) {
+        //     conf.onSuccess = function () {
+        //         console.log('onSuccess',this.value);
+        //     }
+        // }
+        // if (!conf.onError) {
+        //     conf.onError = function () {
+        //         console.log('onError',this.value);
+        //     }
+        // }
 
-        conf.uploadFile = function(event) {
-            this.files = event.files;
-            this.sendAjax();
-        }
-        conf.sendAjax =  function () {
-            var that = this;
-            var fDesc = that.getFileValue();
-            if (!fDesc || !fDesc[0])
-                throw 'descrittore file upload non valido';
-            fDesc = fDesc[0];
-            // var fileName = fDesc.filename;
-            var route = that.createRoute(that.routeName);
-            that.setRouteValues(route);
-            that.error = false;
-            that.complete = false;
-
-            var realUrl = Server.getUrl(route.getUrl());
-            console.log('realurl', route.getUrl())
-            var fdata = new FormData();
-            //data.append('file',jQuery(that.$el).find('[c-image-file]').prop('files')[0]);
-            fdata.append('file', fDesc)
-            console.log('ajaxFields', that.ajaxFields)
-            for (var k in that.ajaxFields)
-                fdata.append(k, that.ajaxFields[k])
-            Server.post(realUrl,fdata,function(data) {
-                that.json = data;
-                if (!data.error) {
-                    console.log("Success: Files sent!", data);
-                    if (data.error) {
-                        // var msg = null;
-                        // try {
-                        //     var tmp = JSON.parse(data.msg);
-                        //     msg = "";
-                        //     for (k in tmp) {
-                        //         msg += tmp[k] + '\n';
-                        //     }
-                        // } catch (e) {
-                        //     msg = data.msg;
-                        // }
-                        that.error = true;
-                        that.errorMessage = Server.getErrorMessage(data.msg);
-                        //self._showError(dialog,msg);
-                        window.jQuery(that.$el).find('[crud-button="ok"]').addClass("disabled");
-                        that.value =  JSON.stringify({});
-                        that.fileInfo = null;
-                        return;
-                    }
-                    that.$emit('success', that);
-                    that.complete = true;
-
-                    console.log('done, data.result', data.result);
-
-                    //that.lastUpload = Object.assign({},data.result);
-                    that.fileInfo = Object.assign({},data.result);
-                    // TODO sfruttare meglio l'oggetto upload primeface
-                    that.value = JSON.stringify(data.result); //.replace(/\\"/g, '"');
-                    //that.$refs.preview.setValue(data.result);
-                    that.onSuccess();
-                } else {
-                    console.log("An error occurred, the files couldn't be sent!");
-                    that.fileInfo = null;
-                    that.error = true;
-                    that.errorMessage = Server.getErrorMessage(data.msg);
-                    that.value = JSON.stringify({});
-                    that.onError();
-                }
-
-            });
-        };
+        // conf.uploadFile = function(event) {
+        //     this.files = event.files;
+        //     this.sendAjax();
+        // }
+        // conf.sendAjax =  function () {
+        //     var that = this;
+        //     var fDesc = that.getFileValue();
+        //     if (!fDesc || !fDesc[0])
+        //         throw 'descrittore file upload non valido';
+        //     fDesc = fDesc[0];
+        //     // var fileName = fDesc.filename;
+        //     var route = that.createRoute(that.routeName);
+        //     that.setRouteValues(route);
+        //     that.error = false;
+        //     that.complete = false;
+        //
+        //     var realUrl = Server.getUrl(route.getUrl());
+        //     console.log('realurl', route.getUrl())
+        //     var fdata = new FormData();
+        //     //data.append('file',jQuery(that.$el).find('[c-image-file]').prop('files')[0]);
+        //     fdata.append('file', fDesc)
+        //     console.log('ajaxFields', that.ajaxFields)
+        //     for (var k in that.ajaxFields)
+        //         fdata.append(k, that.ajaxFields[k])
+        //     Server.post(realUrl,fdata,function(data) {
+        //         that.json = data;
+        //         if (!data.error) {
+        //             console.log("Success: Files sent!", data);
+        //             if (data.error) {
+        //                 // var msg = null;
+        //                 // try {
+        //                 //     var tmp = JSON.parse(data.msg);
+        //                 //     msg = "";
+        //                 //     for (k in tmp) {
+        //                 //         msg += tmp[k] + '\n';
+        //                 //     }
+        //                 // } catch (e) {
+        //                 //     msg = data.msg;
+        //                 // }
+        //                 that.error = true;
+        //                 that.errorMessage = Server.getErrorMessage(data.msg);
+        //                 //self._showError(dialog,msg);
+        //                 window.jQuery(that.$el).find('[crud-button="ok"]').addClass("disabled");
+        //                 that.value =  JSON.stringify({});
+        //                 that.fileInfo = null;
+        //                 return;
+        //             }
+        //             that.$emit('success', that);
+        //             that.complete = true;
+        //
+        //             console.log('done, data.result', data.result);
+        //
+        //             //that.lastUpload = Object.assign({},data.result);
+        //             that.fileInfo = Object.assign({},data.result);
+        //             // TODO sfruttare meglio l'oggetto upload primeface
+        //             that.value = JSON.stringify(data.result); //.replace(/\\"/g, '"');
+        //             //that.$refs.preview.setValue(data.result);
+        //             that.onSuccess();
+        //         } else {
+        //             console.log("An error occurred, the files couldn't be sent!");
+        //             that.fileInfo = null;
+        //             that.error = true;
+        //             that.errorMessage = Server.getErrorMessage(data.msg);
+        //             that.value = JSON.stringify({});
+        //             that.onError();
+        //         }
+        //
+        //     });
+        // };
         if (conf.value && (conf.value instanceof Object)) {
             conf.fileInfo = conf.value;
             conf.value = JSON.stringify(conf.value);
         }
-        return conf;
     },
     wPreview(conf) {
         if (!conf.height) {
