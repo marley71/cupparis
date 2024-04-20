@@ -246,6 +246,18 @@ export default {
         d.mount(div);
         window.DIALOG = d;
         return d;
+    },
+    /**
+     * la conf puo' essere una stringa o un object questa funziona la normalizza ad un oggetto.
+     * esempio un widget lo possiamo definire come field : 'w-text' oppure field : { type : 'w-text'}
+     */
+    normalizeConf(conf) {
+        if (typeof conf === 'string' || conf instanceof String) {
+            return {
+                type : conf
+            }
+        }
+        return conf;
     }
 
 }
