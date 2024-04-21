@@ -52,7 +52,7 @@ const viewConfs = {
         rows : 20,
         loaded : false,
         route : null,
-        routeName : null,
+        routeName : 'list',
         defaultWidgetType : 'w-text',
         fieldsConfig:{},
         actionsConfig: {},

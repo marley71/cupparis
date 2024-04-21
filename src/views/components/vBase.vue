@@ -107,12 +107,13 @@ export default {
 
         setRouteValues() {
             let that = this;
+            console.debug('routeName',that.iconf.routeName)
             if (!that.iconf.routeName)
                 return ;
             // if (!that.route) {
             //     that.route = that.createRoute(that.routeName);
             // }
-            that.iconf.route.setValuesFromObj(that);
+            that.iconf.route.setValuesFromObj(that.iconf);
         },
         beforeLoadData() {
 
