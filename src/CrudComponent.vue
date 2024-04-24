@@ -21,14 +21,14 @@ export default {
     //         iconf: useModelWrapper(props, emit),
     //     }
     // },
-    mounted() {
-        let that = this;
-        if (that.iconf.ready) {
-            setTimeout(function () { // per permettere l'esistenza del domhtml
-                that.iconf.ready.apply(this);
-            },20);
-        }
-    },
+    // mounted() {
+    //     let that = this;
+    //     if (that.iconf.ready) {
+    //         setTimeout(function () { // per permettere l'esistenza del domhtml
+    //             that.iconf.ready.apply(this);
+    //         },20);
+    //     }
+    // },
     methods : {
         /**
          * ritorna la traduzione della chiave passata presente nel vettore $lang altrimenti ritorna al chiave stessa

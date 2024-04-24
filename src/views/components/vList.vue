@@ -52,8 +52,8 @@
                         <Column v-if="iconf.selectionMode" :selection-mode="iconf.selectionMode"></Column>
                         <Column v-if="getRecordActionsPosition() == 'start' && hasRecordActions()" :exportable="false" :header="translate('app.actions')">
                             <template #body="slotProps">
-                                <c-action :ref="'r'+slotProps.index" :conf="recordActionsConf[slotProps.index % getPerPage()]"
-                                          :layout="actionsLayout" :menubar-title="actionsLayoutTitle"></c-action>
+                                <c-action :ref="'r'+slotProps.index" :conf="iconf.recordActionsConf[slotProps.index % getPerPage()]"
+                                          :layout="iconf.actionsLayout" :menubar-title="iconf.actionsLayoutTitle"></c-action>
                             </template>
                         </Column>
                         <Column v-for="(col) in getVisibleFields()" :field="col" :header="columnLabel(col)" :key="col"
@@ -68,8 +68,8 @@
                         </Column>
                         <Column v-if="getRecordActionsPosition() == 'end' && hasRecordActions()" :exportable="false" :header="translate('app.actions')">
                             <template #body="slotProps">
-                                <c-action :ref="'r'+slotProps.index" :conf="recordActionsConf[slotProps.index % getPerPage()]"
-                                          :layout="actionsLayout" :menubar-title="actionsLayoutTitle"></c-action>
+                                <c-action :ref="'r'+slotProps.index" :conf="iconf.recordActionsConf[slotProps.index % getPerPage()]"
+                                          :layout="iconf.actionsLayout" :menubar-title="iconf.actionsLayoutTitle"></c-action>
                             </template>
                         </Column>
 
@@ -106,7 +106,7 @@
 <!--                                </div>-->
 <!--                                <template v-if="Object.keys(collectionActions).length > 0">-->
 <!--                                    <div class="mt-5 lg:mt-0">-->
-<!--                                        <c-action :layout="actionsLayout" :conf="collectionActions"></c-action>-->
+<!--                                        <c-action :layout="iconf.actionsLayout" :conf="collectionActions"></c-action>-->
 <!--                                    </div>-->
 
 <!--                                </template>-->
@@ -134,8 +134,8 @@
                         <Column v-if="iconf.selectionMode" :selection-mode="iconf.selectionMode"></Column>
                         <Column v-if="getRecordActionsPosition() == 'start' && hasRecordActions()" :exportable="false" :header="translate('app.actions')">
                             <template #body="slotProps">
-                                <c-action :ref="'r'+slotProps.index" :conf="recordActionsConf[slotProps.index % getPerPage()]"
-                                          :layout="actionsLayout" :menubar-title="actionsLayoutTitle"></c-action>
+                                <c-action :ref="'r'+slotProps.index" :conf="iconf.recordActionsConf[slotProps.index % getPerPage()]"
+                                          :layout="iconf.actionsLayout" :menubar-title="iconf.actionsLayoutTitle"></c-action>
                             </template>
                         </Column>
                         <Column v-for="(col) in getVisibleFields()" :field="col" :header="columnLabel(col)" :key="col"
@@ -150,8 +150,8 @@
                         </Column>
                         <Column v-if="getRecordActionsPosition() == 'end' && hasRecordActions()" :exportable="false" :header="translate('app.actions')">
                             <template #body="slotProps">
-                                <c-action :ref="'r'+slotProps.index" :conf="recordActionsConf[slotProps.index % getPerPage()]"
-                                          :layout="actionsLayout" :menubar-title="actionsLayoutTitle"></c-action>
+                                <c-action :ref="'r'+slotProps.index" :conf="iconf.recordActionsConf[slotProps.index % getPerPage()]"
+                                          :layout="iconf.actionsLayout" :menubar-title="iconf.actionsLayoutTitle"></c-action>
                             </template>
                         </Column>
 
@@ -268,9 +268,9 @@ export default {
 
             let rActions = {};
             let gActions = {};
-            for (let i in that.actions) {
-                let aName = that.actions[i];
-                let aConf = CrudCore.getActionConf(aName,that.actionsConfig[aName]);
+            for (let i in that.iconf.actions) {
+                let aName = that.iconf.actions[i];
+                let aConf = CrudCore.getActionConf(aName,that.iconf.actionsConfig[aName]);
                 console.debug(aName,'caso parent --view',aConf)
                 // --vecchio modo
                 // let aConf = Object.assign({}, actionConfs['default']);
@@ -282,8 +282,8 @@ export default {
                     gActions[aName] = aConf;
                 }
             }
-            that.recordActionsConf = [];
-            that.collectionActions = {};
+            that.iconf.recordActionsConf = [];
+            that.iconf.collectionActions = {};
 
 
             //let rActions = ['action-delete','action-edit','action-view'];
@@ -296,20 +296,20 @@ export default {
                     aConf.index = i;
                     rowActions[aName] = aConf;
                 }
-                that.recordActionsConf.push({actions: rowActions});
+                that.iconf.recordActionsConf.push({actions: rowActions});
             }
-            that.collectionActions.actions = {};
+            that.iconf.collectionActions.actions = {};
             let needSelection = false;
             for (let aName in gActions) {
                 let aConf = Object.assign({}, gActions[aName]);
                 aConf.modelData = that.iconf.value;
                 aConf.view = that;
                 needSelection |= aConf.needSelection;
-                that.collectionActions.actions[aName] = aConf;
+                that.iconf.collectionActions.actions[aName] = aConf;
             }
             this.selectionMode = needSelection?'multiple':null;
-            console.debug('RECORDACTIONS', that.recordActionsConf)
-            console.debug('GLOBAL ACTIONS', that.collectionActions);
+            console.debug('RECORDACTIONS', that.iconf.recordActionsConf)
+            console.debug('GLOBAL ACTIONS', that.iconf.collectionActions);
             this._setMenuCollection();
         },
 
@@ -401,8 +401,8 @@ export default {
         getFirst() {
             let first = 0;
             if (this.iconf.routeName) {
-                if (this.pagination && this.pagination.current_page) {
-                    first = (this.pagination.current_page - 1) * this.pagination.per_page;
+                if (this.iconf.pagination && this.iconf.pagination.current_page) {
+                    first = (this.iconf.pagination.current_page - 1) * this.iconf.pagination.per_page;
                 }
             }
             //console.log('first', first, this.pagination);
@@ -427,9 +427,9 @@ export default {
             //return this.getTotal();
         },
         getPage() {
-            console.log('pagination',this.pagination);
+            console.log('pagination',this.iconf.pagination);
             if (this.iconf.routeName)
-                return this.pagination.current_page;
+                return this.iconf.pagination.current_page;
             return parseInt(Math.floor(this.getTotal()/this.getPerPage()));
         },
         getRecordAction(index, name) {
@@ -451,7 +451,7 @@ export default {
         },
         hasCollectionActions() {
             let that = this;
-            //console.log('hasRecordActions',that.recordActionsConf);
+            //console.log('hasRecordActions',that.iconf.recordActionsConf);
             if (that.iconf.collectionActions && that.iconf.collectionActions.length && (Object.keys(that.iconf.collectionActions[0].actions).length > 0))
                 return true;
             return false;
@@ -465,7 +465,7 @@ export default {
         },
         getRecordActionsPosition() {
             let that = this;
-            //console.log('getRecordActionsPosition, hasRecordActions',that.recordActionsConf,that.recordActionsPosition);
+            //console.log('getRecordActionsPosition, hasRecordActions',that.iconf.recordActionsConf,that.recordActionsPosition);
             switch (that.iconf.recordActionsPosition) {
                 case 'end':
                     return 'end';

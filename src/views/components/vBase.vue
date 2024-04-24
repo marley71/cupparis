@@ -1,6 +1,7 @@
 <script>
 import CrudComponent from "../../CrudComponent.vue";
 import Server from "../../core/Server";
+import CrudCore from "../../core/CrudCore";
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
 
 export default {
@@ -55,7 +56,7 @@ export default {
         //
         // //console.log('view Props',dt);
         let dt = {
-            loaded : true
+            loaded : false
         }
         return dt;
     },
@@ -107,12 +108,8 @@ export default {
 
         setRouteValues() {
             let that = this;
-            console.debug('routeName',that.iconf.routeName)
             if (!that.iconf.routeName)
                 return ;
-            // if (!that.route) {
-            //     that.route = that.createRoute(that.routeName);
-            // }
             that.iconf.route.setValuesFromObj(that.iconf);
         },
         beforeLoadData() {
@@ -150,12 +147,12 @@ export default {
         fillData: function (json) {
             var that = this;
             if (that.iconf.route) {
-                var protocol = that.createProtocol(that.iconf.route.getProtocol());
+                var protocol = CrudCore.createProtocol(that.iconf.route.getProtocol());
                 console.log('fillData',json);
                 protocol.jsonToData(json);
                 var prop = Object.getOwnPropertyNames(protocol);
                 for (var i in prop) {
-                    that[prop[i]] = protocol[prop[i]];
+                    that.iconf[prop[i]] = protocol[prop[i]];
                 }
             }
             that.json = json;
@@ -205,6 +202,7 @@ export default {
         },
         getWidgetLayout(field,prop) {
             var that = this;
+            //console.debug('vBase.getWidgetLayout',that.iconf.widgetsConfig)
             var layout = that.iconf.widgetsConfig[field].layout;
             //console.debug(field,prop,"PROPLAYOUT",layout,'view layout',that.layout);
             if (!layout) {

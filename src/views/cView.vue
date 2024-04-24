@@ -5,12 +5,14 @@
 import { useModelWrapper } from './modelWrapper'
 import CrudComponent from "../CrudComponent.vue";
 import vList from "./components/vList.vue"
-
+import vRecord from './components/vRecord.vue'
+import vView from './components/vView.vue'
+import vEdit from './components/vEdit.vue'
 export default {
     name : "cView",
     extends : CrudComponent,
     components : {
-        vList
+        vList,vRecord,vView,vEdit
     },
     props : {
         conf : {
@@ -21,11 +23,11 @@ export default {
             }
         }
     },
-    setup(props, { emit }) {
-        return {
-            iconf: useModelWrapper(props, emit),
-        }
-    },
+    // setup(props, { emit }) {
+    //     return {
+    //         iconf: useModelWrapper(props, emit),
+    //     }
+    // },
 }
 </script>
 

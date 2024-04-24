@@ -1,6 +1,9 @@
 import CrudVars from "../confs/CrudVars.js";
 import {EventBus} from 'primevue/utils';
 import { defineAsyncComponent, createApp } from 'vue'
+import ProtocolList from "./ProtocolList";
+import ProtocolRecord from "./ProtocolRecord";
+import actions from "../confs/actions";
 const Ev = EventBus();
 
 export default {
@@ -258,6 +261,31 @@ export default {
             }
         }
         return conf;
+    },
+    createProtocol(type) {
+        switch (type) {
+            case 'list':
+                return new ProtocolList();
+            case 'record':
+                return new ProtocolRecord();
+        }
+    },
+    getActionConf(name,options) {
+        let aConf = Object.assign({}, actions['default']);
+        let opt = options || {};
+        let defaultActionConf = actions[name]?actions[name]:null;
+        if (!defaultActionConf) {
+            console.debug('actions caso parent ',opt.actionParent ,actions[opt.actionParent])
+            if (opt.actionParent && actions[opt.actionParent]) {
+                defaultActionConf = actions[opt.actionParent];
+            } else {
+                defaultActionConf = {};
+            }
+            console.debug('actions caso parent 2',defaultActionConf)
+        }
+        aConf = Object.assign(aConf, defaultActionConf);
+        aConf = Object.assign(aConf,opt );
+        return aConf;
     }
 
 }
