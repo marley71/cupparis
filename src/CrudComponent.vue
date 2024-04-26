@@ -5,6 +5,7 @@ import WidgetsWrapperConf from "./confs/WidgetsWrapperConf";
 import Route from './core/Route';
 import routeConfs from "./confs/routes";
 import Server from "./core/Server";
+import CrudVars from "./confs/CrudVars";
 
 export default {
     name : "CrudComponent",
@@ -120,6 +121,24 @@ export default {
         },
         customDialog(msg,props,callbacks) {
             CrudCore.customDialog(msg,props,callbacks);
+        },
+
+        getDefaultViewConf(modelName,type) {
+            let mn = 'Model' + CrudCore.upperCaseFirst(CrudCore.camelCase(modelName));
+            let mc = CrudVars.modelConfs[mn] || {};
+            console.log('ModelConfs key',mn,mc);
+            if (mc[type]) {
+                return CrudCore.clone(mc[type]); // TODO mettere il clone
+            }
+            let dt = CrudVars.viewTypeToViewConf[type];
+            console.log('ModelConfs.'+modelName+'.'+dt,mc[dt])
+            if (mc[dt]) {
+                return CrudCore.clone(mc[dt]);
+            }
+            return CrudVars.viewDefaultConfs[type] || {
+                modelName : modelName,
+                type : type,
+            };
         },
 
         // componentDialog(compName,componentConf,title,dialogConf) {

@@ -6,7 +6,7 @@ import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
 import {useModelWrapper} from "../modelWrapper";
 
 export default {
-    name: "vRecord",
+    name: "vView",
     extends: vRecord,
     setup(props, { emit }) {
         ViewsWrapperConf.setConf(props.conf);

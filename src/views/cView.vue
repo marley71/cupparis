@@ -8,11 +8,12 @@ import vList from "./components/vList.vue"
 import vRecord from './components/vRecord.vue'
 import vView from './components/vView.vue'
 import vEdit from './components/vEdit.vue'
+import vListEdit from './components/vListEdit.vue'
 export default {
     name : "cView",
     extends : CrudComponent,
     components : {
-        vList,vRecord,vView,vEdit
+        vList,vRecord,vView,vEdit,vListEdit
     },
     props : {
         conf : {

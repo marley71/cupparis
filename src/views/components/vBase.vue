@@ -23,6 +23,9 @@ export default {
         that.Server = Server;
     },
     mounted() {
+        if (this.iconf.mounted) {
+            this.iconf.mounted.apply(this);
+        }
         this.createViewRoute();
     },
     data() {
@@ -148,7 +151,7 @@ export default {
             var that = this;
             if (that.iconf.route) {
                 var protocol = CrudCore.createProtocol(that.iconf.route.getProtocol());
-                console.log('fillData',json);
+                //console.log('fillData',json);
                 protocol.jsonToData(json);
                 var prop = Object.getOwnPropertyNames(protocol);
                 for (var i in prop) {
@@ -159,7 +162,7 @@ export default {
         },
 
         setParams(params) {
-            console.log('route set params',params);
+            //console.log('route set params',params);
             this.iconf.route.setParams(params);
             this.reload();
         },
@@ -255,6 +258,12 @@ export default {
         },
         isBlocked() {
             return this.blocked;
+        },
+        getFields() {
+            return this.iconf.fields;
+        },
+        getHiddenColumns() {
+            return this.iconf.hiddenColumns;
         }
     }
 }

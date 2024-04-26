@@ -21,6 +21,11 @@ export default {
             }
         }
     },
+    mounted() {
+        if (this.iconf.mounted) {
+            this.iconf.mounted.apply(this);
+        }
+    },
     methods : {
         onChange(event) {
             this.value = this.iconf.value;

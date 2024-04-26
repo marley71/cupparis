@@ -266,7 +266,7 @@ export default {
                 actions: {}
             };
             let rActions = that.iconf.actions;
-            console.log('actionsConfig', that.iconf.actionsConfig)
+            //console.log('actionsConfig', that.iconf.actionsConfig)
             for (let k in rActions) {
                 let aName = rActions[k];
                 let currenConfig = Object.assign({},(that.iconf.actionsConfig[aName] || {}));
@@ -275,7 +275,7 @@ export default {
                 let aConf = CrudCore.getActionConf(aName,currenConfig);
                 that.iconf.recordActionsConf.actions[aName] = aConf;
             }
-            console.log('recordActionsConf', that.iconf.recordActionsConf)
+            //console.log('recordActionsConf', that.iconf.recordActionsConf)
         },
         getWidgegConf(index, field, data) {
             let that = this;
@@ -467,7 +467,7 @@ export default {
             }
         },
         isRemovedWidget(field) {
-            console.debug('isRemovedWidget',field,(this.removedWidgets.indexOf(field) >= 0))
+            //console.debug('isRemovedWidget',field,(this.removedWidgets.indexOf(field) >= 0))
             return (this.removedWidgets.indexOf(field) >= 0);
         },
         removeWidget(field) {
@@ -484,14 +484,14 @@ export default {
             }
         },
         isHiddenWidget(field) {
-            console.debug('isHiddenWidget',field,(this.hiddenWidgets.indexOf(field) >= 0))
+            //console.debug('isHiddenWidget',field,(this.hiddenWidgets.indexOf(field) >= 0))
             return (this.hiddenWidgets.indexOf(field) >= 0);
         },
         hideWidget(field) {
             if (this.hiddenWidgets.indexOf(field) < 0) {
                 this.hiddenWidgets.push(field);
             }
-            console.debug('hideWidget',field,this.hiddenWidgets)
+            //console.debug('hideWidget',field,this.hiddenWidgets)
         },
         showWidget(field) {
             let idx = this.hiddenWidgets.indexOf(field);

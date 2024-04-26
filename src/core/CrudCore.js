@@ -286,6 +286,26 @@ export default {
         aConf = Object.assign(aConf, defaultActionConf);
         aConf = Object.assign(aConf,opt );
         return aConf;
+    },
+    setupApp(app) {
+        for (let k in this.useItems) {
+            let item = this.useItems[k];
+            if (item.param) {
+                app.use(item.obj,item.param)
+            } else {
+                app.use(item.obj);
+            }
+        }
+
+        for (let k in this.directiveItems) {
+            app.directive(k,this.directiveItems[k])
+        }
+
+        for (let k in this.componentItems) {
+            app.component(k,this.componentItems[k])
+        }
+        this.globalProperties = app.config.globalProperties;
+        console.debug('globalProperties',this.globalProperties)
     }
 
 }
