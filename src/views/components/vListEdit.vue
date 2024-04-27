@@ -81,7 +81,7 @@ import Server from "../../core/Server";
 import CrudCore from "../../core/CrudCore";
 import vList from './vList.vue';
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
-import {useModelWrapper} from "../modelWrapper";
+import {useModelWrapper} from "../../core/modelWrapper";
 
 export default {
     name: "vListEdit",

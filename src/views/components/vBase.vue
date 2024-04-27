@@ -2,7 +2,7 @@
 import CrudComponent from "../../CrudComponent.vue";
 import Server from "../../core/Server";
 import CrudCore from "../../core/CrudCore";
-import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
+//import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
 
 export default {
     name: "vBase",

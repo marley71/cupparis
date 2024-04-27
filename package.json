@@ -1,9 +1,10 @@
 {
-    "name": "cupparis-primevue2",
+    "name": "cupparis",
     "version": "1.0.0",
     "private": true,
     "description": "crud cupparis basato su primevue",
     "main": "src/index.js",
+    "module" : true,
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

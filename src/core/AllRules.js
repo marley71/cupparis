@@ -20,6 +20,7 @@ size,
 toTypedSchema,
 url} from '@vee-validate/rules';
 
+
 const AllRules = {
     alpha : alpha,
     alpha_dash : alpha_dash,

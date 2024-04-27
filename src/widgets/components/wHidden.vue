@@ -1,6 +1,6 @@
 <script>
 import wBase from './wBase.vue'
-import {useModelWrapper} from "../modelWrapper";
+import {useModelWrapper} from "../../core/modelWrapper";
 export default {
     name: "wHidden",
     extends: wBase,

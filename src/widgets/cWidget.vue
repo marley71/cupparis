@@ -9,7 +9,7 @@
     </span>
 </template>
 <script>
-import { useModelWrapper } from './modelWrapper'
+import {useModelWrapper} from "../core/modelWrapper";
 import CrudComponent from "../CrudComponent.vue";
 import wHidden from "./components/wHidden.vue"
 import wInput from "./components/wInput.vue"

@@ -3,8 +3,7 @@
 
 import vRecord from './vRecord.vue';
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
-import {useModelWrapper} from "../modelWrapper";
-
+import {useModelWrapper} from "../../core/modelWrapper";
 export default {
     name: "vSearch",
     extends: vRecord,

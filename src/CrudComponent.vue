@@ -1,7 +1,7 @@
 <script>
-//import { useModelWrapper } from './modelWrapper'
+import { useModelWrapper } from './core/modelWrapper'
 import CrudCore from "./core/CrudCore";
-import WidgetsWrapperConf from "./confs/WidgetsWrapperConf";
+//import WidgetsWrapperConf from "./confs/WidgetsWrapperConf";
 import Route from './core/Route';
 import routeConfs from "./confs/routes";
 import Server from "./core/Server";
@@ -17,11 +17,11 @@ export default {
             }
         }
     },
-    // setup(props, { emit }) {
-    //     return {
-    //         iconf: useModelWrapper(props, emit),
-    //     }
-    // },
+    setup(props, { emit }) {
+        return {
+            iconf: useModelWrapper(props, emit),
+        }
+    },
     // mounted() {
     //     let that = this;
     //     if (that.iconf.ready) {
@@ -47,18 +47,18 @@ export default {
             var langKey = context ? context + '.' + key : key
             return CrudCore.upperCaseFirst(CrudCore.translate(langKey, plural, params))
         },
-        setConf(config) {
-            let that = this;
-            let defaultConf = WidgetsWrapperConf.setConf(config);
-            let mergedConf = Object.assign(defaultConf,config);
-            console.debug('config',config);
-            setTimeout(function () {
-                for (let k in mergedConf) {
-                    that.iconf[k] = mergedConf[k];
-                }
-                console.debug('setConf',that.iconf);
-            },10)
-        },
+        // setConf(config) {
+        //     let that = this;
+        //     let defaultConf = WidgetsWrapperConf.setConf(config);
+        //     let mergedConf = Object.assign(defaultConf,config);
+        //     console.debug('config',config);
+        //     setTimeout(function () {
+        //         for (let k in mergedConf) {
+        //             that.iconf[k] = mergedConf[k];
+        //         }
+        //         console.debug('setConf',that.iconf);
+        //     },10)
+        // },
         // --- eventi
         // change(event) {
         //     console.debug('change',event)

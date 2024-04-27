@@ -182,7 +182,7 @@ import actionConfs from "../../confs/actions";
 import vBase from './vBase.vue';
 import CrudCore from "../../core/CrudCore";
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
-import {useModelWrapper} from "../modelWrapper";
+import {useModelWrapper} from "../../core/modelWrapper";
 const defaultPanelConf = () => {
     return {
         componentName: null,

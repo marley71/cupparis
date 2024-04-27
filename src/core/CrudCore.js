@@ -306,6 +306,13 @@ export default {
         }
         this.globalProperties = app.config.globalProperties;
         console.debug('globalProperties',this.globalProperties)
+    },
+    setCache(key,value) {
+        window.localStorage.setItem(key,value)
+    },
+
+    getCache(key) {
+        return window.localStorage.getItem(key)
     }
 
 }

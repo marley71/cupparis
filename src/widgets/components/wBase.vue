@@ -1,6 +1,6 @@
 <script>
 import CrudComponent from "../../CrudComponent.vue";
-import {useModelWrapper} from "../modelWrapper";
+import {useModelWrapper} from "../../core/modelWrapper";
 export default {
     name: "wBase",
     extends: CrudComponent,

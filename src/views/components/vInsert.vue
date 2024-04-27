@@ -4,9 +4,8 @@
 import vRecord from './vRecord.vue';
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
 import {useModelWrapper} from "../../core/modelWrapper";
-
 export default {
-    name: "vEdit",
+    name: "vInsert",
     extends: vRecord,
     setup(props, { emit }) {
         ViewsWrapperConf.setConf(props.conf);

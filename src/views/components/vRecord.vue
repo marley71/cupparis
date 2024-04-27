@@ -163,21 +163,11 @@ import actionConfs from "../../confs/actions";
 import Server from "../../core/Server";
 import viewConfs from "../../confs/views";
 import { defineRule,validate } from 'vee-validate';
+
 import AllRules  from "../../core/AllRules";
 import CrudCore from "../../core/CrudCore";
 import ViewsWrapperConf from "../../confs/ViewsWrapperConf";
-import {useModelWrapper} from "../modelWrapper";
-//import { localize,setLocale } from '@vee-validate/i18n';
-
-// configure({
-//   // Generates an English message locale generator
-//   generateMessage: localize('en', {
-//     messages: {
-//       required: 'This {field} is required aaaaaa',
-//     },
-//   }),
-// });
-// setLocale('en');
+import {useModelWrapper} from "../../core/modelWrapper";
 
 export default {
     name: "vRecord",

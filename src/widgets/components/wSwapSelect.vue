@@ -1,6 +1,6 @@
 <script>
 import wSwap from './wSwap.vue'
-import {useModelWrapper} from "../modelWrapper";
+import {useModelWrapper} from "../../core/modelWrapper";
 import WidgetsWrapperConf from "../../confs/WidgetsWrapperConf";
 export default {
     name: "wSwapSelect",
