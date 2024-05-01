@@ -7,6 +7,7 @@ export default {
     name: "wSwap",
     extends: wBase,
     setup(props, { emit }) {
+        props.conf.modelName = props.conf.view?props.conf.view.prop('modelName'):null;
         WidgetsWrapperConf.setConf(props.conf);
         // let wc = new WidgetsWrapperConf();
         // props.conf = wc.loadConf(props.conf);
@@ -37,10 +38,11 @@ export default {
     },
     mounted() {
         var that = this;
-        console.debug('swap mounted',that.iconf);
+
         var keys = Object.keys(that.iconf.domainValues);
         that.currentIndex = keys.indexOf(''+that.iconf.value);
         that.toggleActive = that.currentIndex?true:false;
+        console.debug('swap mounted',that.iconf.value,that.currentIndex,that.toggleActive,keys);
     },
     data() {
         return {
@@ -57,12 +59,13 @@ export default {
             route.setParams({
                 id: that.iconf.modelData.id,
                 field: that.iconf.name,
-                value: that.iconf.toggleValue?1:0,
+                value: that.toggleActive?1:0,
             });
             return route;
         },
         _swap: function () {
             var that = this;
+            console.debug('wSwap._swap',that.toggleActive,that.iconf);
             if (that.iconf.isAjax) {
                 var r = that.createRoute(that.iconf.routeName);
                 that.setRouteValues(r);
@@ -74,16 +77,17 @@ export default {
                         that.errorDialog(json.msg);
                         return;
                     }
-                    that.iconf.value = that.iconf.toggleValue?1:0;
+                    that.iconf.value = that.toggleActive?1:0;
                     that.onChange();
                 })
             } else {
-                that.iconf.value = that.iconf.toggleValue?1:0;
+                that.iconf.value = that.toggleActive?1:0;
                 that.onChange();
             }
 
         },
         swap(event) {
+            console.debug('swap event',event)
             var that = this;
             that._swap();
         },
@@ -104,7 +108,7 @@ export default {
 </script>
 
 <template>
-    <InputSwitch v-model="iconf.toggleValue" @change="swap" :disabled="iconf.extraBind.disabled?true:false"/>
+    <InputSwitch v-model="toggleActive" @change="swap" :disabled="iconf.extraBind.disabled?true:false"/>
 </template>
 
 <style scoped>

@@ -318,15 +318,15 @@ export default {
                 }
                 if (that.type == 'v-edit') {
                     route = that.createRoute('update');
-                    var pk = that.cPk || that.pk || 0;
+                    var pk = that.iconf.cPk || that.iconf.pk || 0;
                     route.setValues({
-                        modelName: that.modelName,
+                        modelName: that.iconf.modelName,
                         pk: pk
                     });
                 } else {
                     route = that.createRoute('create');
                     route.setValues({
-                        modelName: that.modelName,
+                        modelName: that.iconf.modelName,
                     });
                 }
                 route.setParams(that.getViewData());
@@ -340,13 +340,36 @@ export default {
 
 
         },
-        getViewData(ref) {
+        // getViewData(ref) {
+        //     let that = this;
+        //     let form = ref || 'form';
+        //     const formData = new FormData(that.$refs[form]);
+        //     console.log('formData', formData);
+        //     return formData;
+        // },
+        getViewData() {
             let that = this;
-            let form = ref || 'form';
-            const formData = new FormData(that.$refs[form]);
-            console.log('formData', formData);
-            return formData;
+            let formFields = null;
+            if (that.iconf.whiteList) {
+                formFields = that.iconf.whiteList;
+            } else if (that.iconf.blackList) {
+                formFields = that.iconf.fields.filter(x => !that.iconf.blackList.includes(x));
+            } else {
+                formFields = that.iconf.fields;
+            }
+            let values = {};
+            for (let i in formFields) {
+                let field = formFields[i];
+                let w = that.getWidget(field);
+                if (!w) {
+                    console.warn('Impossibile trovare il widget ' + field);
+                    continue;
+                }
+                values[field] = w.getValue();
+            }
+            return values;
         },
+
         getWidget(field) {
             return Array.isArray(this.$refs[field])?this.$refs[field][0]:this.$refs[field];
         },

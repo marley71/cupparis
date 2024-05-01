@@ -88,6 +88,8 @@ const viewConfs = {
         actionDivider: false,
         blocked : false,
         modelName : null,
+        whiteList : null,
+        blackList : null,
     }
 }
 

@@ -1,11 +1,11 @@
 <template>
     <span>
         <component :is="conf.type" :conf="conf"></component>
-        <div class="overflow-hidden">
-            <span class="text-red-400" v-for="(error,index) in iconf.errors" :key="index">
-               {{ error }} <span v-if="parseInt(index) < (Object.keys(iconf.errors).length-1)">,&nbsp;</span>
-            </span>
-        </div>
+<!--        <div class="overflow-hidden">-->
+<!--            <span class="text-red-400" v-for="(error,index) in iconf.errors" :key="index">-->
+<!--               {{ error }} <span v-if="parseInt(index) < (Object.keys(iconf.errors).length-1)">,&nbsp;</span>-->
+<!--            </span>-->
+<!--        </div>-->
     </span>
 </template>
 <script>
@@ -62,11 +62,11 @@ export default {
             }
         }
     },
-    setup(props, { emit }) {
-        return {
-            iconf: useModelWrapper(props, emit),
-        }
-    },
+    // setup(props, { emit }) {
+    //     return {
+    //         iconf: useModelWrapper(props, emit),
+    //     }
+    // },
 }
 </script>
 

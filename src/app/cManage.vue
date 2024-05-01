@@ -1,23 +1,27 @@
 <template>
-    <Panel class="managePanel">
+    <Panel class="managePanel rounded">
         <template #header>
             <h5 class="p-panel-title">
-                <span v-if="title" >
-                    {{title}}
+                <span v-if="iconf.title" >
+                    {{iconf.title}}
                 </span>
                 <span v-else>
-                    {{translate('app.gestione')}} {{ translate(modelName + '.label', null,1) }}
+                    {{translate('app.gestione')}} {{ translate(iconf.modelName + '.label', null,1) }}
                 </span>
             </h5>
         </template>
-        <div v-if="sectionTitle" class="p-card-subtitle" >
-            {{sectionTitle}}
+        <div v-if="iconf.sectionTitle" class="p-card-subtitle" >
+            {{iconf.sectionTitle}}
         </div>
-        <div >
+        <div class="text-center" v-if="mode=='loading'">
+            <ProgressSpinner ></ProgressSpinner>
+        </div>
+
+        <div>
             <div v-show="mode=='list'">
-                <template v-if="!hideSearch">
-                    <c-view v-if="!searchComponentName" :conf="search" ref="vSearch" @search="searchList"></c-view>
-                    <component v-else :is="searchComponentName" :conf="search" ref="vSearch" @search="searchList"></component>
+                <template v-if="!iconf.hideSearch">
+                    <c-view v-if="!iconf.searchComponentName" :conf="iconf.search" ref="vSearch" @search="searchList"></c-view>
+                    <component v-else :is="iconf.searchComponentName" :conf="iconf.search" ref="vSearch" @search="searchList"></component>
                 </template>
 
 <!--                <Divider align="center" class="listDivider mt-5">-->
@@ -26,16 +30,16 @@
 <!--                    </span>-->
 <!--                </Divider>-->
 
-                <c-view v-if="!listComponentName"  :conf="list" ref="vList" @loaded="showListMia"></c-view>
-                <component v-else :is="listComponentName" :conf="list" ref="vList"></component>
+                <c-view v-if="!iconf.listComponentName"  :conf="iconf.list" ref="vList" @loaded="showListMia"></c-view>
+                <component v-else :is="iconf.listComponentName" :conf="iconf.list" ref="vList"></component>
             </div>
             <template v-if="mode=='edit'">
-                <c-view v-if="!editComponentName"  :conf="edit" ref="vRecord"></c-view>
-                <component v-else :is="editComponentName" :conf="edit" ref="vRecord"></component>
+                <c-view v-if="!iconf.editComponentName"  :conf="iconf.edit" ref="vRecord"></c-view>
+                <component v-else :is="iconf.editComponentName" :conf="iconf.edit" ref="vRecord"></component>
             </template>
             <template v-else-if="mode=='insert'">
-                <c-view v-if="!insertComponentName"  :conf="insert" ref="vRecord"></c-view>
-                <component v-else :is="insertComponentName" :conf="insert" ref="vRecord"></component>
+                <c-view v-if="!iconf.insertComponentName"  :conf="iconf.insert" ref="vRecord"></c-view>
+                <component v-else :is="iconf.insertComponentName" :conf="iconf.insert" ref="vRecord"></component>
             </template>
         </div>
         <Dialog class="p-dialog" v-model:visible="viewDisplay" :modal="true" :style="{width: '50vw'}">
@@ -44,8 +48,8 @@
             </template>
 
             <template v-if="viewDisplay">
-                <c-view v-if="!viewComponentName" :conf="view" ref="vView"></c-view>
-                <component v-else :is="viewComponentName" :conf="view"></component>
+                <c-view v-if="!iconf.viewComponentName" :conf="iconf.view" ref="vView"></c-view>
+                <component v-else :is="iconf.viewComponentName" :conf="iconf.view"></component>
             </template>
             <div class="modal-footer">
                 <Button :label="translate('app.ok')" icon="pi pi-check" autofocus @click="viewDisplay=false"/>
@@ -85,63 +89,52 @@ export default {
         }
     },
     mounted() {
+        window.MG = this;
         this.showContext();
     },
     setup(props, { emit }) {
+        props.conf.title = null;
+        props.conf.sectionTitle = null;
+        props.conf.hideSearch = false;
+        props.conf.autoUpdateHash = true;
+        props.conf.baseRouteName = 'manage';
+        props.conf.editComponentName = null;
+        props.conf.listComponentName = null;
+        props.conf.searchComponentName = null;
+        props.conf.insertComponentName = null;
+        props.conf.viewComponentName = null;
+        if (props.conf.list) {
+            props.conf.list.autoload = false;
+        }
+        // that.conf.viewTitle = '';
         return {
             iconf: useModelWrapper(props, emit),
         }
     },
     data() {
-        let that = this;
-        if (!('title' in that.conf)) {
-            that.conf.title = null;
-        }
-        if (!('sectionTitle' in that.conf)) {
-            that.conf.sectionTitle = null;
-        }
-        if (!('hideSearch' in that.conf)) {
-            that.conf.hideSearch = false;
-        }
-        if (!('autoUpdateHash' in that.conf)) {
-            that.conf.autoUpdateHash = true;
-        }
-        let wc = new viewWrapperConf();
-        console.log('wc',wc);
-        //that.conf.list = that.conf.list?wc.loadConf(that.conf.list):{};
-        // that.conf.view = that.conf.view?wc.loadConf(that.conf.view):{};
-        that.conf.list = wc.loadConf(that.conf.list);
-        that.conf.edit = that.conf.edit?wc.loadConf(that.conf.edit):{};
-        // that.conf.insert = that.conf.insert?wc.loadConf(that.conf.insert):null;
 
+        // let wc = new viewWrapperConf();
+        // console.log('wc',wc);
+        // //that.conf.list = that.conf.list?wc.loadConf(that.conf.list):{};
+        // // that.conf.view = that.conf.view?wc.loadConf(that.conf.view):{};
+        // that.conf.list = wc.loadConf(that.conf.list);
+        // that.conf.edit = that.conf.edit?wc.loadConf(that.conf.edit):{};
+        // // that.conf.insert = that.conf.insert?wc.loadConf(that.conf.insert):null;
+        //
         this.setManageActions();
-        that.conf.mode = 'list';
-        that.conf.viewDisplay = false;
-        if (!('insert' in that.conf)) {
-            that.conf.insert = Object.assign({},CrudCore.clone(that.conf.edit));
-            that.conf.insert.type = 'v-insert';
-            that.conf.insert.routeName = 'insert';
-        }
-        if (!('view' in that.conf)) {
-            that.conf.view = Object.assign({},CrudCore.clone(that.conf.view));
-            that.conf.view.type = 'v-view';
-            that.conf.view.routeName = 'view';
-            that.conf.view.modelName = that.conf.modelName;
-            console.log('modelName',that.conf.modelName);
-        }
-        if (!that.conf.baseRouteName) {  // indica il nome del path per la manage, di default e' manage ma in caso di oggetti estesi potrebbe essere diverso
-            that.conf.baseRouteName = 'manage';
-        }
-        that.conf.editComponentName = that.conf.editComponentName || null;
-        that.conf.listComponentName = that.conf.listComponentName || null;
-        that.conf.searchComponentName = that.conf.searchComponentName || null;
-        that.conf.insertComponentName = that.conf.insertComponentName || null;
-        that.conf.viewComponentName = that.conf.viewComponentName || null;
-        that.conf.viewTitle = '';
-        if (this.conf.list) {
-            this.conf.list.autoload = false;
-        }
-        return that.conf;
+        this.setDefaultViewsProperties()
+        // that.conf.mode = 'list';
+        // that.conf.viewDisplay = false;
+
+
+        // if (this.conf.list) {
+        //     this.conf.list.autoload = false;
+        // }
+        // return that.conf;
+        return {
+            mode : 'loading',
+            viewDisplay : false,
+        };
     },
     methods : {
         searchList(event) {
@@ -152,40 +145,79 @@ export default {
             }
             //this.$refs.vList.instance().setParams(event);
         },
+        setDefaultViewsProperties() {
+            let that = this;
+            console.debug('cManage.setDefaultViewsProperties',that.iconf);
+
+            if (!('search' in that.iconf)) {
+                that.iconf.search = {
+                    type : 'v-search',
+                    routeName : 'search',
+                    modelName : that.iconf.modelName
+                }
+            }
+
+            if (!('edit' in that.iconf)) {
+                that.iconf.edit = {
+                    type : 'v-edit',
+                    routeName : 'edit',
+                    pk : null,
+                    modelName : that.iconf.modelName
+                }
+            }
+            if (!('insert' in that.iconf)) {
+                that.iconf.insert = Object.assign({},CrudCore.clone(that.iconf.edit));
+                that.iconf.insert.type = 'v-insert';
+                that.iconf.insert.routeName = 'insert';
+            }
+            if (!('view' in that.iconf)) {
+                that.iconf.view = Object.assign({},CrudCore.clone(that.iconf.view));
+                that.iconf.view.type = 'v-view';
+                that.iconf.view.routeName = 'view';
+                that.iconf.view.modelName = that.iconf.modelName;
+                console.log('modelName',that.iconf.modelName);
+            }
+            // if (that.iconf.list) {
+            //     this.conf.list.autoload = false;
+            // }
+            this.conf.insert.autoload= false;
+            this.conf.edit.autoload= false;
+        },
         setManageActions() {
             let that = this;
             let manage = this;
-            if (!that.conf.list.actionsConfig) {
-                that.conf.list.actionsConfig = {};
-            }
-            if (that.conf.list.actions.indexOf('action-view') >= 0) {
-                let actionView = that.conf.list.actionsConfig['action-view'] || {};
+            // in caso di configurazioni non valide metto i valori accettabili
+            that.iconf.list.actionsConfig = that.iconf.list.actionsConfig || {};
+            that.iconf.list.actions = that.iconf.list.actions || [];
+
+            if (that.iconf.list.actions.indexOf('action-view') >= 0) {
+                let actionView = that.iconf.list.actionsConfig['action-view'] || {};
                 if (!actionView.execute){
                     actionView.execute = function () {
                         let thatAction = this;
-                        that.view.pk = thatAction.modelData[that.$refs.vList.instance().primaryKey];
+                        that.iconf.view.pk = thatAction.modelData[that.$refs.vList.instance().prop('primaryKey')];
                         that.viewDisplay = true;
-                        that.viewTitle = that.translate('app.dettagli',0,null,[that.view.pk]);
+                        that.viewTitle = that.translate('app.dettagli',0,null,[that.iconf.view.pk]);
                     }
                 }
-                that.conf.list.actionsConfig['action-view'] = actionView;
+                that.iconf.list.actionsConfig['action-view'] = actionView;
             }
-            if (that.conf.list.actions.indexOf('action-edit') >= 0) {
-                let actionEdit = that.conf.list.actionsConfig['action-edit'] || {};
+            if (that.iconf.list.actions.indexOf('action-edit') >= 0) {
+                let actionEdit = that.iconf.list.actionsConfig['action-edit'] || {};
                 if (!actionEdit.execute){
                     actionEdit.execute = function () {
                         let thatAction = this;
-                        that.edit.pk = thatAction.modelData[manage.getViewList().primaryKey];
+                        that.iconf.edit.pk = thatAction.modelData[manage.getViewList().prop('primaryKey')];
                         that.mode = 'edit';
                         let confName = this.$route.params.cConf;
-                        that.updateHash(confName,'edit',[that.edit.pk]);
+                        that.updateHash(confName,'edit',[that.iconf.edit.pk]);
                         //window.history.pushState({},'',window.location.pathname + '#/' + manage.baseRouteName + '/'+ confName +'/edit/' + that.edit.pk);
                     }
                 }
-                that.conf.list.actionsConfig['action-edit'] = actionEdit;
+                that.iconf.list.actionsConfig['action-edit'] = actionEdit;
             }
-            if (that.conf.list.actions.indexOf('action-insert') >= 0) {
-                let actionInsert = that.conf.list.actionsConfig['action-insert'] || {};
+            if (that.iconf.list.actions.indexOf('action-insert') >= 0) {
+                let actionInsert = that.iconf.list.actionsConfig['action-insert'] || {};
                 if (!actionInsert.execute){
                     actionInsert.execute = function () {
                         that.mode = 'insert';
@@ -194,10 +226,10 @@ export default {
                         //window.history.pushState({},'',window.location.pathname + '#/' + manage.baseRouteName + '/'+ confName +'/insert');
                     }
                 }
-                that.conf.list.actionsConfig['action-insert'] = actionInsert;
+                that.iconf.list.actionsConfig['action-insert'] = actionInsert;
             }
-            if (that.conf.edit && that.conf.edit.actions && that.conf.edit.actions.indexOf('action-back') >= 0) {
-                let actionBack = that.conf.edit.actionsConfig['action-back'] || {};
+            if (that.iconf.edit && that.iconf.edit.actions && that.iconf.edit.actions.indexOf('action-back') >= 0) {
+                let actionBack = that.iconf.edit.actionsConfig['action-back'] || {};
                 if (!actionBack.execute){
                     actionBack.execute = function () {
                         that.mode = 'list';
@@ -210,7 +242,7 @@ export default {
 
                     }
                 }
-                that.conf.edit.actionsConfig['action-back'] = actionBack;
+                that.iconf.edit.actionsConfig['action-back'] = actionBack;
             }
         },
         getViewList() {
@@ -241,7 +273,7 @@ export default {
             that.mode = mode;
             switch(mode) {
                 case 'edit':
-                    that.edit.pk = context[1];
+                    that.iconf.edit.pk = context[1];
                     break;
                 case 'insert':
                     break;
@@ -299,7 +331,7 @@ export default {
             let that = this;
             if (type ==  'list') {
                 let vList = this.getViewList();
-                if (!vList || !vList.loaded) {
+                if (!vList || !vList.prop('loaded')) {
                     setTimeout(function() {
                         that.waitViewLoaded(type,callback);
                     },20)
@@ -308,7 +340,7 @@ export default {
                 }
             } else if (type == 'search') {
                 let vSearch = this.getViewSearch();
-                if (!vSearch || !vSearch.loaded) {
+                if (!vSearch || !vSearch.prop('loaded')) {
                     setTimeout(function() {
                         that.waitViewLoaded(type,callback);
                     },20)
@@ -322,7 +354,7 @@ export default {
         showListMia() {
             let that = this;
             let confName = this.$route.params.cConf;
-            let params = that.getViewList().route.getParams();
+            let params = that.getViewList().prop('route').getParams();
             let context = [];
             if (params && params instanceof FormData) {
                 for (let key of params.keys()) {

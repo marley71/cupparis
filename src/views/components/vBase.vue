@@ -264,6 +264,9 @@ export default {
         },
         getHiddenColumns() {
             return this.iconf.hiddenColumns;
+        },
+        prop(name) {
+            return this.iconf[name];
         }
     }
 }

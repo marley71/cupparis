@@ -1,5 +1,5 @@
 <template>
-    <component :is="conf.type" :conf="conf"></component>
+    <component :is="conf.type" :conf="conf" ref="vRef"></component>
 </template>
 <script>
 //import { useModelWrapper } from './modelWrapper'
@@ -25,6 +25,11 @@ export default {
             }
         }
     },
+    methods : {
+        instance() {
+            return this.$refs.vRef;
+        }
+    }
     // setup(props, { emit }) {
     //     return {
     //         iconf: useModelWrapper(props, emit),

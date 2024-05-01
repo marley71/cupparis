@@ -186,7 +186,7 @@ const actionConfs = {
         text : '',
         icon : 'fa fa-edit',
         execute () {
-            let url = '#/edit/' + CrudCore.pascalCase('model_'+this.view.modelName) + '.edit/' + this.modelData[this.view.primaryKey]
+            let url = '#/edit/' + CrudCore.pascalCase('model_'+this.view.prop('modelName')) + '.edit/' + this.modelData[this.view.prop('primaryKey')]
             document.location.href=url
         }
     },
@@ -199,7 +199,7 @@ const actionConfs = {
         viewType : 'v-view',
         execute () {
             let ta = this;
-            let defaultConf = ta.getDefaultViewConf(ta.view.modelName,ta.viewType);
+            let defaultConf = ta.getDefaultViewConf(ta.view.prop('modelName'),ta.viewType);
             defaultConf.pk = ta.modelData.id;
             console.log('ta',ta.viewType,defaultConf);
             CrudCore.componentDialog('c-view',defaultConf);
@@ -217,10 +217,10 @@ const actionConfs = {
         setRouteValues : function(route) {
             var that = this;
             route.setValues({
-                modelName: that.view.modelName
+                modelName: that.view.prop('modelName')
             });
             route.setParams({
-                id : that.modelData[that.view.primaryKey],
+                id : that.modelData[that.view.prop('primaryKey')],
                 _method:'DELETE',
             });
             return route;
@@ -328,7 +328,7 @@ const actionConfs = {
         text : 'app.nuovo',
         execute() {
             //var url = "/insert/" + this.view.modelName + "/new";
-            let url = '#/insert/' + CrudCore.pascalCase('model_'+this.view.modelName) + ".insert"
+            let url = '#/insert/' + CrudCore.pascalCase('model_'+this.view.prop('modelName')) + ".insert"
             document.location.href=url;
         }
     },

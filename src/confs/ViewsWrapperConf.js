@@ -72,7 +72,7 @@ export default {
     },
 
     vList(conf) {
-        console.log('wList conf',conf);
+        //console.log('wList conf',conf);
         //conf.selectionMode = 'multiple';
         conf.selected = null;
         if (! ('routeName' in conf) ){

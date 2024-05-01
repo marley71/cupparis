@@ -10,23 +10,23 @@
                 <div class="mb-0" v-html="translate('app.import-desc')"></div>
             </slot>
 
-            <div v-if="step == 'upload'" class="panel panel-default">
+            <div v-if="iconf.step == 'upload'" class="panel panel-default">
                 <h5>{{ translate('app.import-file') }}</h5>
                 <div class="col-12">
                     <c-view :conf="_uploadConf()" ref="viewUpload"></c-view>
                 </div>
             </div>
-            <div v-if="['saving','loading'].indexOf(step) >= 0">
+            <div v-if="['saving','loading'].indexOf(iconf.step) >= 0">
                 <ProgressBar mode="indeterminate">
-                    <div v-if="step==='loading'">
+                    <div v-if="iconf.step==='loading'">
                         Lettura file e check degli errori ...&nbsp;
                     </div>
-                    <div v-if="step==='saving'">
+                    <div v-if="iconf.step==='saving'">
                         Salvataggio del file importato ...
                     </div>
                 </ProgressBar>
             </div>
-            <div v-if="step=='tosave'">
+            <div v-if="iconf.step=='tosave'">
                 <div>File caricato e controllato</div>
                 <hr/>
                 <v-record :conf="_saveConf()"></v-record>
@@ -42,27 +42,42 @@ import CrudComponent from "../CrudComponent.vue";
 import Server from "../core/Server";
 import cView from "../views/cView.vue";
 import vRecord from "../views/components/vRecord.vue";
+import {useModelWrapper} from "../core/modelWrapper";
 
 export default {
     name: "c-import",
     components: {vRecord, cView},
     extends : CrudComponent,
     //props : ['conf'],
+    setup(props, { emit }) {
+        props.conf.title = null;
+        props.conf.sectionTitle = null;
+        props.conf.step = 'upload';
+        props.conf.viewDisplay = false;
+        props.conf.importStatus = 'upload';
+        props.conf.jobId = null;
+        return {
+            iconf: useModelWrapper(props, emit),
+        }
+    },
     data() {
         let that = this;
         window.IMPORT = this;
-        if (!('title' in that.conf)) {
-            that.conf.title = null;
-        }
-        if (!('sectionTitle' in that.conf)) {
-            that.conf.sectionTitle = null;
-        }
+        // if (!('title' in that.conf)) {
+        //     that.conf.title = null;
+        // }
+        // if (!('sectionTitle' in that.conf)) {
+        //     that.conf.sectionTitle = null;
+        // }
         //this.setManageActions();
-        that.conf.step = 'upload';
-        that.conf.viewDisplay = false;
-        that.conf.importStatus = 'upload';
-        that.conf.jobId = null;
-        return that.conf;
+        // that.conf.step = 'upload';
+        // that.conf.viewDisplay = false;
+        // that.conf.importStatus = 'upload';
+        // that.conf.jobId = null;
+        return {
+
+        }
+        //return that.conf;
     },
     watch: {
         importStatus() {
